@@ -55,13 +55,73 @@ class Graph {
   }
 
   /** traverse graph with DFS and returns array of Node values */
-  depthFirstSearch(start) { }
+  depthFirstSearch(start) {
+    let toVisitStack = [start];
+    let seen = new Set([start]);
+    const values = []
+
+    while (toVisitStack.length > 0) {
+      let currNode = toVisitStack.pop();
+
+      values.push(currNode.value);
+      for (let neighbor of currNode.adjacent) {
+        if (!seen.has(neighbor)) {
+          toVisitStack.push(neighbor);
+          seen.add(neighbor);
+        }
+      }
+    }
+    return values;
+   }
 
   /** traverse graph with BDS and returns array of Node values */
-  breadthFirstSearch(start) { }
+  breadthFirstSearch(start) {
+    let toVisitQueue = [start];
+    let seen = new Set([start]);
+    const values = []
+
+    while (toVisitQueue.length > 0) {
+      let currNode = toVisitQueue.shift();
+
+      values.push(currNode.value);
+      for (let neighbor of currNode.adjacent) {
+        if (!seen.has(neighbor)) {
+          toVisitQueue.push(neighbor);
+          seen.add(neighbor);
+        }
+      }
+    }
+    return values;
+  }
 
   /** find the distance of the shortest path from the start vertex to the end vertex */
-  distanceOfShortestPath(start, end) { }
+  distanceOfShortestPath(start, end) {
+    let toVisitQueue = [start];
+    let seen = new Set([]);
+
+    let nodesAtLevel = 1;
+    let nodesAtNextLevel = 0;
+    let depthCount = 0;
+
+    while (toVisitQueue.length > 0) {
+      let currNode = toVisitQueue.shift();
+      if (currNode === end) return depthCount;
+
+      for (let neighbor of currNode.adjacent) {
+        if (!seen.has(neighbor)) {
+          toVisitQueue.push(neighbor);
+          seen.add(neighbor);
+          nodesAtNextLevel++;
+        }
+      }
+      nodesAtLevel--;
+      if (nodesAtLevel === 0) {
+        depthCount++;
+        nodesAtLevel = nodesAtNextLevel;
+        nodesAtNextLevel = 0;
+      }
+    }
+   }
 }
 
 module.exports = { Graph, Node };
